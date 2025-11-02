@@ -55,7 +55,7 @@ struct ContentView: View {
         NavigationView {
             Form{
                 Section("入力") {
-                    //身長の入力欄(picker)
+                    //身長の入力欄(textFieldとpicker)
                     HStack {
                         TextField("身長", value: $heightValue, format: .number)
                             .keyboardType(.numberPad)
@@ -68,7 +68,7 @@ struct ContentView: View {
                         }
                     }
                     
-                    //体重の入力欄（textField）
+                    //体重の入力欄（textFieldとtext）
                     HStack {
                         TextField("体重", value: $weightValue, format: .number)
                             .keyboardType(.numberPad)
@@ -79,7 +79,7 @@ struct ContentView: View {
                     }
                 }
                 //BMI(text)
-                Section("あなたのBMIは・・・"){
+                Section("結果"){
                     if let bmi = calculatedBMI {
                         Text("あなたのBMIは **\(String(format: "%.2f", bmi))** です。")
                             .font(.title3)
@@ -94,8 +94,6 @@ struct ContentView: View {
         }
     }
 }
-    
-    
     
     #Preview {
         ContentView()
