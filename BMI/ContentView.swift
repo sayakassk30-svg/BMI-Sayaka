@@ -7,18 +7,58 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var enteredNumber: Double = 0.0
-    @State private var originalUnit = "meters"
+    @State private var heightValue: Double?
+    @State private var weightValue: Double?
+    @State private var originalUnit = "cm"
     
     
-    let lengthUnits = ["meter", "centimeters"]
+    let lengthUnits = ["m", "cm"]
+    
+    // BMIを自動計算するプロパティ
+      var calculatedBMI: Double? {
+          guard let h = heightValue, let w = weightValue else { return nil }
+          
+          // 入力単位をメートルに変換
+          let heightInMeters: Double
+          switch originalUnit {
+          case "cm":
+              heightInMeters = h / 100
+          case "inch":
+              heightInMeters = h * 0.0254
+          default:
+              heightInMeters = h
+          }
+          
+          guard heightInMeters > 0 else { return nil }
+          
+          return w / (heightInMeters * heightInMeters)
+      }
+      
+      // BMIの判定文
+      var bmiCategory: String {
+          guard let bmi = calculatedBMI else { return "未入力" }
+          switch bmi {
+          case ..<18.5:
+              return "低体重"
+          case 18.5..<25:
+              return "普通体重"
+          case 25..<30:
+              return "肥満（1度）"
+          case 30..<35:
+              return "肥満（2度）"
+          case 35..<40:
+              return "肥満（3度）"
+          default:
+              return "肥満（4度）"
+          }
+      }
     
     var body: some View {
         Form{
-            //身長の入力欄
             Section("入力") {
+                //身長の入力欄(picker)
                 HStack {
-                    TextField("Original", value: $enteredNumber, format: .number)
+                    TextField("身長", value: $heightValue, format: .number)
                         .keyboardType(.numberPad)
                         .padding()
                     
@@ -31,7 +71,7 @@ struct ContentView: View {
                 
                 //体重の入力欄（textField）
                 HStack {
-                    TextField("Original", value: $enteredNumber, format: .number)
+                    TextField("体重", value: $weightValue, format: .number)
                         .keyboardType(.numberPad)
                         .padding()
                     
@@ -40,8 +80,18 @@ struct ContentView: View {
                 }
             }
             //BMI(text)
-            Section("結果"){
-                Text("Text 1")
+            Section("あなたのBMIは・・・"){
+                if let bmi = calculatedBMI {
+                                       Text("あなたのBMIは **\(String(format: "%.1f", bmi))** です。")
+                                           .font(.title3)
+                                           .bold()
+                                       
+                                       Text("判定: \(bmiCategory)")
+                                           .foregroundColor(.secondary)
+                                   }
+
+                
+                
                 
                 
             }
