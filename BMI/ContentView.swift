@@ -23,8 +23,6 @@ struct ContentView: View {
           switch originalUnit {
           case "cm":
               heightInMeters = h / 100
-          case "inch":
-              heightInMeters = h * 0.0254
           default:
               heightInMeters = h
           }
@@ -54,49 +52,46 @@ struct ContentView: View {
       }
     
     var body: some View {
-        Form{
-            Section("入力") {
-                //身長の入力欄(picker)
-                HStack {
-                    TextField("身長", value: $heightValue, format: .number)
-                        .keyboardType(.numberPad)
-                        .padding()
-                    
-                    Picker("", selection: $originalUnit) {
-                        ForEach(lengthUnits, id: \.self) { unit in
-                            Text(unit)
+        NavigationView {
+            Form{
+                Section("入力") {
+                    //身長の入力欄(picker)
+                    HStack {
+                        TextField("身長", value: $heightValue, format: .number)
+                            .keyboardType(.numberPad)
+                            .padding()
+                        
+                        Picker("", selection: $originalUnit) {
+                            ForEach(lengthUnits, id: \.self) { unit in
+                                Text(unit)
+                            }
                         }
                     }
+                    
+                    //体重の入力欄（textField）
+                    HStack {
+                        TextField("体重", value: $weightValue, format: .number)
+                            .keyboardType(.numberPad)
+                            .padding()
+                        
+                        Text("kg")
+                        
+                    }
                 }
-                
-                //体重の入力欄（textField）
-                HStack {
-                    TextField("体重", value: $weightValue, format: .number)
-                        .keyboardType(.numberPad)
-                        .padding()
-                    
-                    Text("kg")
-                    
+                //BMI(text)
+                Section("あなたのBMIは・・・"){
+                    if let bmi = calculatedBMI {
+                        Text("あなたのBMIは **\(String(format: "%.2f", bmi))** です。")
+                            .font(.title3)
+                            .bold()
+                        
+                        Text("評価: \(bmiCategory)")
+                            .foregroundColor(.secondary)
+                    }
                 }
             }
-            //BMI(text)
-            Section("あなたのBMIは・・・"){
-                if let bmi = calculatedBMI {
-                                       Text("あなたのBMIは **\(String(format: "%.1f", bmi))** です。")
-                                           .font(.title3)
-                                           .bold()
-                                       
-                                       Text("判定: \(bmiCategory)")
-                                           .foregroundColor(.secondary)
-                                   }
-
-                
-                
-                
-                
-            }
+            .navigationTitle("BMI計算機")
         }
-        
     }
 }
     
