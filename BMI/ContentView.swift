@@ -56,13 +56,11 @@ struct ContentView: View {
         NavigationView {
             Form{
                 
-
-                
                 Section("入力") {
                     //身長の入力欄(textFieldとpicker)
                     HStack {
                         TextField("身長", value: $heightValue, format: .number)
-                            .keyboardType(.numberPad)
+                            .keyboardType(.decimalPad)
                             .font(.title3)
                             .padding()
                             .focused($isFocused)
@@ -74,12 +72,14 @@ struct ContentView: View {
                                     .font(.title3)
                             }
                         }
+                        .pickerStyle(.wheel)
+                        .frame(height: 80)
                     }
                     
                     //体重の入力欄（textFieldとtext）
                     HStack {
                         TextField("体重", value: $weightValue, format: .number)
-                            .keyboardType(.numberPad)
+                            .keyboardType(.decimalPad)
                             .font(.title3)
                             .padding()
                             .focused($isFocused)
@@ -89,6 +89,7 @@ struct ContentView: View {
                             .foregroundStyle(.gray)
                         
                     }
+                    .frame(height: 80)
                 }
                
                 
