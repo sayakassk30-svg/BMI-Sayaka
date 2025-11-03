@@ -10,7 +10,7 @@ struct ContentView: View {
     @State private var heightValue: Double?
     @State private var weightValue: Double?
     @State private var originalUnit = "cm"
-    @FocusState private var isInputActive: Bool
+    @FocusState private var isFocused: Bool
     
     
     let lengthUnits = ["m", "cm"]
@@ -56,15 +56,7 @@ struct ContentView: View {
         NavigationView {
             Form{
                 
-                //キーボードを閉じる
-                Section {
-                    EmptyView()
-                        .frame(height: 0)
-                        .listRowBackground(Color.clear)
-                        .onTapGesture {
-                            isInputActive = false
-                        }
-                }
+
                 
                 Section("入力") {
                     //身長の入力欄(textFieldとpicker)
@@ -73,7 +65,8 @@ struct ContentView: View {
                             .keyboardType(.numberPad)
                             .font(.title3)
                             .padding()
-                            .focused($isInputActive)
+                            .focused($isFocused)
+                            
                         
                         Picker("", selection: $originalUnit) {
                             ForEach(lengthUnits, id: \.self) { unit in
@@ -89,7 +82,7 @@ struct ContentView: View {
                             .keyboardType(.numberPad)
                             .font(.title3)
                             .padding()
-                            .focused($isInputActive)
+                            .focused($isFocused)
                         
                         Text("kg")
                             .font(.title3)
@@ -125,11 +118,21 @@ struct ContentView: View {
                 
             }
             .navigationTitle("BMI計算機")
-            .simultaneousGesture(
-                TapGesture().onEnded {
-                    isInputActive = false
+            
+            //キーボードを閉じる
+            .toolbar {
+                ToolbarItem(placement: .keyboard) {
+                    HStack{
+                        Spacer()
+                        Button {
+                            isFocused = false
+                        } label: {
+                            Text("Done")
+                        }
+                    }
                 }
-            )
+            }
+            
         }
     }
 }
