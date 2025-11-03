@@ -10,6 +10,7 @@ struct ContentView: View {
     @State private var heightValue: Double?
     @State private var weightValue: Double?
     @State private var originalUnit = "cm"
+    @FocusState private var isInputActive: Bool
     
     
     let lengthUnits = ["m", "cm"]
@@ -34,7 +35,7 @@ struct ContentView: View {
       
       // BMIの判定文
       var bmiCategory: String {
-          guard let bmi = calculatedBMI else { return "未入力" }
+          guard let bmi = calculatedBMI else { return " " }
           switch bmi {
           case ..<18.5:
               return "低体重"
@@ -54,6 +55,17 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             Form{
+                
+                //キーボードを閉じる
+                Section {
+                    EmptyView()
+                        .frame(height: 0)
+                        .listRowBackground(Color.clear)
+                        .onTapGesture {
+                            isInputActive = false
+                        }
+                }
+                
                 Section("入力") {
                     //身長の入力欄(textFieldとpicker)
                     HStack {
@@ -61,6 +73,7 @@ struct ContentView: View {
                             .keyboardType(.numberPad)
                             .font(.title3)
                             .padding()
+                            .focused($isInputActive)
                         
                         Picker("", selection: $originalUnit) {
                             ForEach(lengthUnits, id: \.self) { unit in
@@ -76,6 +89,7 @@ struct ContentView: View {
                             .keyboardType(.numberPad)
                             .font(.title3)
                             .padding()
+                            .focused($isInputActive)
                         
                         Text("kg")
                             .font(.title3)
@@ -83,28 +97,37 @@ struct ContentView: View {
                         
                     }
                 }
+               
+                
                 //BMI(text)
-                Section("結果"){
-                    if let bmi = calculatedBMI {
-                        Text("あなたのBMIは **\(String(format: "%.2f", bmi))** です")
-                            .font(.system(size: 40, weight: .bold))
-                            .foregroundColor(.primary)
-                            .font(.title3)
+                Section("結果") {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("あなたのBMI")
+                            .font(.title2)
                             .bold()
                         
+                        if let bmi = calculatedBMI {
+                            Text(String(format: "%.2f", bmi))
+                                .font(.system(size: 40, weight: .bold))
+                                .foregroundColor(.primary)
+                        } else {
+                            Text("　")
+                                .font(.system(size: 40, weight: .bold))
+                                .foregroundColor(.gray)
+                        }
+                        
                         Text("評価: \(bmiCategory)")
-                            .foregroundColor(.secondary)
+                            .font(.title2)
+                            .bold()
                     }
-                }
-                
-                Section("BMIの計算方法"){
-                    Text("体重(kg) ÷ 身長(m) ÷ 身長(m)")
-                        .padding()
+                    .padding()
                 }
                 
             }
             .navigationTitle("BMI計算機")
-            
+            .onTapGesture {
+                isInputActive = false
+            }
         }
     }
 }
