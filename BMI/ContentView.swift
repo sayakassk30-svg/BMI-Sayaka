@@ -125,9 +125,11 @@ struct ContentView: View {
                 
             }
             .navigationTitle("BMI計算機")
-            .onTapGesture {
-                isInputActive = false
-            }
+            .simultaneousGesture(
+                TapGesture().onEnded {
+                    isInputActive = false
+                }
+            )
         }
     }
 }
