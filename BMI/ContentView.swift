@@ -59,11 +59,13 @@ struct ContentView: View {
                     HStack {
                         TextField("身長", value: $heightValue, format: .number)
                             .keyboardType(.numberPad)
+                            .font(.title3)
                             .padding()
                         
                         Picker("", selection: $originalUnit) {
                             ForEach(lengthUnits, id: \.self) { unit in
                                 Text(unit)
+                                    .font(.title3)
                             }
                         }
                     }
@@ -72,16 +74,21 @@ struct ContentView: View {
                     HStack {
                         TextField("体重", value: $weightValue, format: .number)
                             .keyboardType(.numberPad)
+                            .font(.title3)
                             .padding()
                         
                         Text("kg")
+                            .font(.title3)
+                            .foregroundStyle(.gray)
                         
                     }
                 }
                 //BMI(text)
                 Section("結果"){
                     if let bmi = calculatedBMI {
-                        Text("あなたのBMIは **\(String(format: "%.2f", bmi))** です。")
+                        Text("あなたのBMIは **\(String(format: "%.2f", bmi))** です")
+                            .font(.system(size: 40, weight: .bold))
+                            .foregroundColor(.primary)
                             .font(.title3)
                             .bold()
                         
@@ -89,8 +96,15 @@ struct ContentView: View {
                             .foregroundColor(.secondary)
                     }
                 }
+                
+                Section("BMIの計算方法"){
+                    Text("体重(kg) ÷ 身長(m) ÷ 身長(m)")
+                        .padding()
+                }
+                
             }
             .navigationTitle("BMI計算機")
+            
         }
     }
 }
